@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-st.image("./logoProject.jpeg", width=100)
 st.markdown("<h1 style='text-align: center; sfont-size: 32px;'>Impacte environnemental de la production alimentaire Française sur l'eau  </h1>", unsafe_allow_html=True)
 
 
@@ -28,7 +27,6 @@ df.drop_duplicates(inplace=True)
 
 
 # Navigation bar
-st.sidebar.image("./StephanieHead.jpeg", width=150, use_column_width='auto')  # Photo
 # st.sidebar.markdown("## LI Stephanie M1BIA2")  # Nom Prénom
 # st.sidebar.markdown("[Lien vers mon LinkedIn](https://www.linkedin.com/in/stephanie-li-5868031b6)")  # Lien
 st.sidebar.markdown("<h1 style='text-align: center; font-size: 32px;'> LI Stephanie M1BIA2 </h1>", 
