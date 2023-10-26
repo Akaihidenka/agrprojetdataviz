@@ -71,14 +71,11 @@ plt.ylabel("Consommation moyenne d'eau en m3/kg")
 plt.xticks(rotation=-45, ha="left")
 st.pyplot(fig2)
 
-# ... (les autres visualisations et analyses)
 
-# Tri du DataFrame en fonction de l'épuisement des ressources d'eau et prise des 
 # 30 premiers produits
 top_eau = df.sort_values(by='Épuisement des ressources eau', 
                         ascending=False).head(30)
 
-# Affichage des 'Nom du Produit en Français' de ces produits
 st.markdown("<h1 style='text-align: center; font-size: 25px;'>Top 30 des produits avec la plus grande consommation d'eau </h1>", unsafe_allow_html=True)
 
 top_30 = [f"{str(nom)} :  {str(score)}"  for nom, score in zip(top_eau['Nom du Produit en Français'].tolist(), top_eau['Épuisement des ressources eau'].to_list())]
@@ -88,7 +85,6 @@ for i in range(30):
 
 
 
-# Streamlit app
 st.markdown("<h1 style='text-align: center; font-size: 25px;'>Analyse des groupes d'aliments et leur impact environnemental </h1>", unsafe_allow_html=True)
 
 # Sélection du groupe d'aliment via une liste déroulante
@@ -97,7 +93,6 @@ groupe = st.selectbox('Choisis un groupe d\'aliment', groupes_aliment)
 
 data_subset = df[df["Groupe d'aliment"] == groupe]
 
-# Calculer la somme pour chaque sous-groupe d'aliment
 sum_data = data_subset.groupby("Sous-groupe d'aliment")[['Épuisement des ressources eau', 
                                                         'Acidification terrestre et eaux douces', 
                                                         'Eutrophisation eaux douces']].sum()
@@ -105,7 +100,7 @@ sum_data = data_subset.groupby("Sous-groupe d'aliment")[['Épuisement des ressou
 st.markdown("<h1 style='text-align: center; font-size: 25px;'>Répartition pour le groupe d'aliment </h1>", unsafe_allow_html=True)
 
 
-# Tracer le graphique pour 'Épuisement des ressources eau'
+# Graphique pour 'Épuisement des ressources eau'
 fig1, ax1 = plt.subplots(figsize=(12, 6))
 sum_data['Épuisement des ressources eau'].plot(kind='bar', ax=ax1, color='blue')
 plt.ylabel('Valeur')
@@ -115,7 +110,7 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 st.pyplot(fig1)
 
-# Tracer le graphique pour 'Acidification terrestre et eaux douces'
+# Graphique pour 'Acidification terrestre et eaux douces'
 fig2, ax2 = plt.subplots(figsize=(12, 6))
 sum_data['Acidification terrestre et eaux douces'].plot(kind='bar', ax=ax2, color='green')
 plt.ylabel('Valeur')
@@ -125,7 +120,7 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 st.pyplot(fig2)
 
-# Tracer le graphique pour 'Eutrophisation eaux douces'
+# Graphique pour 'Eutrophisation eaux douces'
 fig3, ax3 = plt.subplots(figsize=(12, 6))
 sum_data['Eutrophisation eaux douces'].plot(kind='bar', ax=ax3, color='red')
 plt.ylabel('Valeur')
@@ -135,27 +130,18 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 st.pyplot(fig3)
 
-
+# Filtres personnalisés
 st.markdown("<h1 style='text-align: center; color: white; font-size: 45px;'> Filtres personnalisés </h1>", unsafe_allow_html=True)
-
-
-# Widget pour choisir un sous-groupe d'aliment
 sous_groupe = st.selectbox("Choisis un sous-groupe d'aliment", df["Sous-groupe d'aliment"].unique())
-
-# Filtrage du dataframe selon le sous-groupe choisi
 df_sous_groupe = df[df["Sous-groupe d'aliment"] == sous_groupe]
-
-# Widget pour choisir un 'nom de produit en français'
 produit = st.selectbox('Choisis un produit', df_sous_groupe['Nom du Produit en Français'].unique())
 
-# Affichage de la consommation d'eau du produit choisi
 eau_produit = df_sous_groupe[df_sous_groupe['Nom du Produit en Français'] == produit]['Épuisement des ressources eau'].values[0]
 text_block = f'''<p style="font-size: 25px;">Consommation d'eau de {produit}: {eau_produit} en m3/kg de produit</p>'''
 st.write(text_block, unsafe_allow_html=True)
 
 seuil = 2  
 if eau_produit > seuil:
-    # Trouver un autre produit du même sous-groupe qui utilise moins d'eau
     alternative = df_sous_groupe[df_sous_groupe['Épuisement des ressources eau'] < eau_produit].sort_values(by='Épuisement des ressources eau').head(1)['Nom du Produit en Français'].values[0]
     text_block=f'''<p style="font-size: 25px;">Pour économiser de l'eau, tu pourrais envisager de consommer {alternative} à la place de {produit}!</p>'''
     st.write(text_block, unsafe_allow_html=True)
@@ -163,21 +149,17 @@ if eau_produit > seuil:
 st.markdown("<h1 style='text-align: center; color: white; font-size: 45px;'> Comparer </h1>", unsafe_allow_html=True)
 
 
-# Widget pour choisir un groupe d'aliment
 groupe = st.selectbox("Choisis un groupe d aliment", 
                     df["Groupe d'aliment"].unique())
 
 # Filtrage du dataframe selon le groupe choisi
 df_groupe = df[df["Groupe d'aliment"] == groupe]
-# st.dataframe(df_groupe)
 
-# Widgets pour choisir deux produits
 produit1 = st.selectbox('Choisis le premier produit',
                         df_groupe['Nom du Produit en Français'].unique())
 produit2 = st.selectbox('Choisis le second produit', 
                         df_groupe[df_groupe['Nom du Produit en Français'] != produit1]['Nom du Produit en Français'].unique())
 
-# Extraction des données des produits choisis
 titles = ['Épuisement des ressources eau', 
         'Acidification terrestre et eaux douces', 
         'Eutrophisation eaux douces']
@@ -198,8 +180,8 @@ info_to_compare = {
     produit2: [round(val, 4) for val in data_produit2]
 }
 
-width = 0.15  # Largeur des barres réduite
-positions = [0.3, 0.7]  # Ajustement de la position pour séparer les barres
+width = 0.15  
+positions = [0.3, 0.7]  
 
 for i, title in enumerate(titles):
     fig, ax = plt.subplots()
@@ -207,26 +189,18 @@ for i, title in enumerate(titles):
     bar1 = ax.bar(positions[0], info_to_compare[produit1][i], width, label=produit1)
     bar2 = ax.bar(positions[1], info_to_compare[produit2][i], width, label=produit2)
     
-    # Paramétrage des labels, titre et légendes.
+   
     ax.set_ylabel(dimensions[i])
     ax.set_title(title)
     ax.set_xticks(positions)
     ax.set_xticklabels([produit1, produit2])
     ax.legend()
     
-    # Définition de la limite y
     max_limit_y = max(info_to_compare[produit1][i], info_to_compare[produit2][i]) * 1.1
     ax.set_ylim(0, max_limit_y)
     
-    # Ajout des labels de valeur sur chaque barre
     ax.bar_label(bar1, padding=3)
     ax.bar_label(bar2, padding=3)
     
     st.pyplot(fig)
     st.write(phrases[i], '\n ')
-
-# Conseil sur le produit qui utilise moins d'eau
-if data_produit1[0] < data_produit2[0]:
-    st.write(f"{produit1} utilise moins d'eau que {produit2}.")
-else:
-    st.write(f"{produit2} utilise moins d'eau que {produit1}.")
