@@ -1,5 +1,5 @@
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
+streamlit == 1.24.0
+pandas == 1.5.3
+matplotlib.pyplot == 3.7.0
+seaborn == 0.12.2
+numpy == 1.23.5
